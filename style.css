@@ -239,6 +239,21 @@ body {
 
 [data-virar] > .verso { transform: rotateY(180deg); }
 
+/* Parado, o cartão fica sem 3D: com preserve-3d o Chrome desenha o texto como
+   imagem e depois estica junto com o palco, e a letra fica borrada. O 3D só liga
+   durante a virada (classe xs-girando, posta pelo script.js); fora dela o lado
+   de trás some com visibility. */
+html:not(.xs-girando) [data-virar] { transform-style: flat; }
+
+html:not(.xs-girando) [data-virar] > .frente,
+html:not(.xs-girando) [data-virar] > .verso {
+  -webkit-backface-visibility: visible;
+  backface-visibility: visible;
+}
+
+html.xs-virado:not(.xs-girando) [data-virar] > .frente,
+html:not(.xs-virado):not(.xs-girando) [data-virar] > .verso { visibility: hidden; }
+
 /* A foto do verso já é clara: fica sem o clareamento que os temas pastel dão na foto da frente */
 .verso .foto { filter: none; }
 

@@ -83,11 +83,17 @@ Xatspace.aoCarregar(function (d) {
     if (matchMedia("(prefers-reduced-motion: reduce)").matches) entrou();
   });
 
-  // Clicar no cartão vira ele; links e o player continuam funcionando normalmente
+  // Clicar no cartão vira ele; links e o player continuam funcionando normalmente.
+  // O 3D (xs-girando) só fica ligado enquanto ele gira, para o texto parado ficar nítido.
+  var raiz = document.documentElement;
   todos("[data-virar]", function (el) {
     el.addEventListener("click", function (e) {
       if (e.target.closest("a, button") || !el.classList.contains("entrou")) return;
-      document.documentElement.classList.toggle("xs-virado");
+      raiz.classList.add("xs-girando");
+      raiz.classList.toggle("xs-virado");
+    });
+    el.addEventListener("transitionend", function (e) {
+      if (e.target === el && e.propertyName === "transform") raiz.classList.remove("xs-girando");
     });
   });
 
