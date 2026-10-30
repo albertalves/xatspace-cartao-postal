@@ -1,4 +1,4 @@
-/* Base compartilhada por todos os modelos */
+/* Base do cartão: palco, player, marca d'água e as cores pastel */
 
 *,
 *::before,
@@ -267,3 +267,15 @@ body {
   height: 28px;
   padding: 0 6px;
 }
+
+/* ---------- Cores pastel ---------- */
+
+/* Paletas pastel, iguais em todos os modelos.
+   Cada modelo liga estas variáveis às suas próprias quando a cor começa com "pastel-". */
+
+[data-cor="pastel-azul"]    { --p-bg: #e3edf6; --p-bg2: #f3f8fc; --p-ac: #6f9fd0; --p-act: #587ea8; --p-ink: #22324a; --p-dk: #1f2a38; --p-papel: #fafcfe; --p-claro: #9abcde; }
+[data-cor="pastel-menta"]   { --p-bg: #e2f1ea; --p-bg2: #f3faf6; --p-ac: #5fb38f; --p-act: #4c8f72; --p-ink: #1f3a30; --p-dk: #1d2b25; --p-papel: #fafdfb; --p-claro: #8fcab1; }
+[data-cor="pastel-areia"]   { --p-bg: #efe7dc; --p-bg2: #f9f4ee; --p-ac: #b58e5c; --p-act: #90714b; --p-ink: #3a2f22; --p-dk: #2a241d; --p-papel: #fdfbf8; --p-claro: #cbb08d; }
+[data-cor="pastel-rosa"]    { --p-bg: #f6e4e6; --p-bg2: #fbf1f2; --p-ac: #e58aa0; --p-act: #b26d7e; --p-ink: #3b2a30; --p-dk: #2b2326; --p-papel: #fdf9fa; --p-claro: #edadbc; }
+[data-cor="pastel-lilas"]   { --p-bg: #ece6f6; --p-bg2: #f7f3fc; --p-ac: #9a7ed8; --p-act: #7a64aa; --p-ink: #2e2640; --p-dk: #262030; --p-papel: #fcfafe; --p-claro: #b8a5e4; }
+[data-cor="pastel-pessego"] { --p-bg: #f8e9df; --p-bg2: #fdf5ef; --p-ac: #e59a72; --p-act: #b37859; --p-ink: #3e2a20; --p-dk: #2d231e; --p-papel: #fefbf9; --p-claro: #edb89c; }

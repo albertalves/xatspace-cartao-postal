@@ -1,13 +1,15 @@
 # xatspace-cartao-postal
 
-Xatspace do Albert no modelo Cartão-postal: clique no cartão para ver o verso com o poema.
+Meu xatspace: um cartão-postal. Clique no cartão para ver o verso com o poema.
 
 ```
-core/                    o motor dos xatspaces (dados, música, marca d'água)
-clientes/albert.js       dados: nome, frase, fotos, playlist, cor
-clientes/albert/         fotos usadas no cartão
-modelos/10-cartao-postal/
-index.html               leva direto para o cartão
+index.html      o cartão
+dados.js        nome, frase, poema, fotos, playlist e cor
+fotos/          fotos do cartão
+style.css       visual do cartão
+script.js       carimbo, poema e a virada do cartão
+xatspace.js     preenche os dados, toca a playlist e põe o selo
+xatspace.css    base: palco, player, selo e cores pastel
 ```
 
-Cópia do modelo 10 de `xatspace_modelos/codigo`. Para mudar foto, frase ou música, edite `clientes/albert.js`.
+Para trocar foto, frase ou música, edite `dados.js`.

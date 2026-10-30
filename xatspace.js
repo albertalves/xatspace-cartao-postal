@@ -1,20 +1,17 @@
 /*
-  Núcleo compartilhado por todos os modelos.
+  Motor do cartão.
 
-  1. Descobre o cliente (?c=nome no link) e carrega clientes/<nome>.js
+  1. Recebe os dados (dados.js chama Xatspace.cliente({ ... }))
   2. Preenche a página com os dados (atributos data-xs-*)
-  3. Aplica a cor (?cor=nome no link, ou "cor" nos dados do cliente)
+  3. Aplica a cor (?cor=nome no link, ou "cor" nos dados)
   4. Ajusta o tamanho do palco (desktop e mobile)
   5. Liga o player de música do YouTube
   6. Coloca a marca d'água
-
-  Para trocar de onde vêm os dados (planilha, Supabase...), só a função
-  carregarCliente() precisa mudar.
 */
 (function () {
-  var config = window.XATSPACE_CONFIG || {};
+  var config = {};
   var raiz = document.documentElement;
-  var base = new URL("../", document.currentScript.src).href;
+  var base = new URL("./", document.currentScript.src).href;
   var aoCarregar = [];
   var dados = null;
 
@@ -22,6 +19,7 @@
     // Chamado pelo arquivo do cliente: Xatspace.cliente({ ... })
     cliente: function (d) {
       if (dados) return;
+      config = d.config || {};
       dados = preparar(d);
       iniciar();
     },
@@ -53,27 +51,17 @@
 
   // ---------- Dados ----------
 
-  function carregarCliente(id) {
-    var s = document.createElement("script");
-    s.src = base + "clientes/" + encodeURIComponent(id) + ".js";
-    s.onerror = function () {
-      console.warn("[xatspace] cliente não encontrado:", id);
-      mostrar();
-    };
-    document.head.appendChild(s);
-  }
-
   function get(obj, caminho) {
     return caminho.split(".").reduce(function (o, k) {
       return o == null ? undefined : o[k];
     }, obj);
   }
 
-  // Caminho relativo vira caminho dentro de clientes/; links completos ficam como estão
+  // Caminho relativo é relativo à pasta do cartão; links completos ficam como estão
   function arquivo(caminho) {
     if (!caminho) return "";
     if (/^(https?:|data:|\/)/.test(caminho)) return caminho;
-    return base + "clientes/" + caminho;
+    return base + caminho;
   }
 
   // Campos calculados a partir dos dados do cliente
@@ -139,16 +127,7 @@
 
   function aplicarCor(d) {
     var cores = (raiz.dataset.cores || "").split(/\s+/).filter(Boolean);
-    // "cor" pode ser uma só para todos os modelos ou uma por modelo:
-    // { "10-cartao-postal": "pastel-areia", padrao: "" }
-    var corDados = d.cor;
-    if (corDados && typeof corDados === "object") {
-      // O modelo é a pasta logo depois de "modelos/" no endereço
-      var partes = location.pathname.split("/");
-      var modelo = partes[partes.lastIndexOf("modelos") + 1] || "";
-      corDados = corDados[modelo] || corDados.padrao;
-    }
-    var pedida = params.get("cor") || corDados;
+    var pedida = params.get("cor") || d.cor;
     var cor = cores.indexOf(pedida) >= 0 ? pedida : cores[0];
     if (pedida && pedida !== cor) console.warn("[xatspace] cor não existe neste modelo:", pedida, "— usando", cor);
     raiz.dataset.cor = cor;
@@ -440,5 +419,4 @@
   // Se algo der errado, mostra a página mesmo assim
   setTimeout(mostrar, 4000);
 
-  carregarCliente(params.get("c") || raiz.dataset.cliente || config.clientePadrao || "albert");
 })();

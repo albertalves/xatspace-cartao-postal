@@ -1,4 +1,4 @@
-// Modelo 10 · Cartão-postal
+// Cartão-postal
 Xatspace.aoCarregar(function (d) {
   var todos = function (sel, fn) {
     Array.prototype.forEach.call(document.querySelectorAll(sel), fn);
