@@ -19,12 +19,6 @@ Xatspace.aoCarregar(function (d) {
     el.hidden = !lista;
   });
 
-  // P.S. com a citação começando em minúscula, como se continuasse a frase
-  var texto = (d.citacao.texto || "").trim();
-  todos("[data-xs-ps]", function (el) {
-    el.textContent = texto.charAt(0).toLowerCase() + texto.slice(1);
-  });
-
   // Carimbo do correio: cidade e data de nascimento (sem ela, a data de hoje)
   var nasc = /^(\d{4})-(\d{2})-(\d{2})$/.exec(d.nascimento || "");
   var data = nasc
@@ -107,9 +101,7 @@ Xatspace.aoCarregar(function (d) {
     }
   }
   encolher(document.querySelector(".desk .msg"), 320);
-  encolher(document.querySelector(".desk .ps"), 110);
   encolher(document.querySelector(".mob .msg"), 160);
-  encolher(document.querySelector(".mob .ps"), 70);
   // Os versos ocupam o espaço que sobra no verso (flex: 1) e diminuem até caber nele.
   // Mede de novo quando as fontes carregam, porque a letra provisória é mais larga.
   function caberPoema() {

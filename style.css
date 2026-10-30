@@ -411,14 +411,6 @@ html:not(.xs-virado):not(.xs-girando) [data-virar] > .verso { visibility: hidden
   mask: linear-gradient(90deg, transparent, #000 30%);
 }
 
-.desk .ps {
-  position: absolute;
-  left: 50px;
-  bottom: 40px;
-  width: 260px;
-  font-size: 16px;
-}
-
 .desk .tag {
   left: 360px;
   bottom: 40px;
@@ -553,11 +545,6 @@ html:not(.xs-virado):not(.xs-girando) [data-virar] > .verso { visibility: hidden
   --pauta-folga: 3px;
   margin-top: 16px;
   font-size: 14px;
-}
-
-.mob .ps {
-  margin-top: 16px;
-  font-size: 13px;
 }
 
 .mob .tag {

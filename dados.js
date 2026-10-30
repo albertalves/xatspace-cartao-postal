@@ -5,7 +5,7 @@ Xatspace.cliente({
   frase: "A coisa mais bonita que você pode fazer por alguém é poupá-lo do seu julgamento.",
   // Quem disse a frase. Vazio = a frase é sua (assina com a inicial).
   fraseAutor: "Desconhecido",
-  // P.S. da frente e poema inteiro do verso
+  // Poema inteiro do verso
   citacao: {
     texto: "A vida é uns deveres que nós trouxemos para fazer em casa.",
     autor: "Mario Quintana",
