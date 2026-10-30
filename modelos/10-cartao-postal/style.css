@@ -1,0 +1,582 @@
+/* Modelo 10 · Cartão-postal
+   Cores: original (azul-ardósia), masculino (verde), feminino (rosa),
+   feminino-2 (lavanda) e as 6 pastel.
+   --bg/--bg2/--bg3: fundo e degradê atrás do cartão; --papel: cartão;
+   --ink: texto; --pm: carimbo do correio. */
+
+:root,
+[data-cor="original"]   { --bg: #20262b; --bg2: #34404a; --bg3: #151a1e; --papel: #f4efe4; --ink: #26303a; --pm: #283c78; }
+[data-cor="masculino"]  { --bg: #1c2420; --bg2: #2f3f36; --bg3: #121814; --papel: #f4efe4; --ink: #22302a; --pm: #1e5a3c; }
+[data-cor="feminino"]   { --bg: #2b1f24; --bg2: #4a3540; --bg3: #1a1216; --papel: #f8eeee; --ink: #3a2630; --pm: #aa325a; }
+[data-cor="feminino-2"] { --bg: #221f2b; --bg2: #3b3550; --bg3: #15131b; --papel: #f3f0f7; --ink: #2e2840; --pm: #6446a0; }
+
+:root {
+  --linha: #b8ad99;
+  --sombra: rgba(0, 0, 0, .55);
+  --foto-filtro: none;
+  --xs-capa: var(--ink);
+  --xs-marca-cor: var(--papel);
+  --xs-marca-destaque: color-mix(in srgb, var(--pm) 35%, var(--papel));
+}
+
+/* Pastel: fundo claro, cartão quase branco e foto mais clara */
+[data-cor^="pastel-"] {
+  --bg: var(--p-bg2);
+  --bg2: var(--p-bg2);
+  --bg3: var(--p-bg);
+  --papel: var(--p-papel);
+  --ink: var(--p-ink);
+  --pm: var(--p-act);
+  --linha: color-mix(in srgb, var(--p-ink) 28%, var(--p-papel));
+  --sombra: rgba(0, 0, 0, .15);
+  --foto-filtro: brightness(1.3) saturate(.9);
+  /* O selo é uma pílula escura, então o texto e o ícone ficam brancos */
+  --xs-marca-cor: #fff;
+  --xs-marca-destaque: #fff;
+}
+
+body {
+  background: var(--bg3) radial-gradient(ellipse at 50% 40%, var(--bg2), var(--bg3) 75%) no-repeat;
+  color: var(--ink);
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+.serif { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; }
+
+/* ---------- Peças do cartão (iguais nos dois palcos) ---------- */
+
+.pic { position: relative; overflow: hidden; }
+
+.pic .foto {
+  position: absolute;
+  inset: 0;
+  background-position: center 60%;
+  filter: var(--foto-filtro);
+}
+
+.pic h1 {
+  position: absolute;
+  color: #fff;
+  line-height: .85;
+  text-shadow: 0 4px 30px rgba(0, 0, 0, .4);
+}
+
+.pic small {
+  position: absolute;
+  color: #fff;
+  text-transform: uppercase;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, .35);
+}
+
+
+.back {
+  position: relative;
+  font-family: "Special Elite", "Courier New", monospace;
+}
+
+/* Selo com a foto de perfil e bordinha picotada */
+.stamp {
+  position: absolute;
+  background: #fff;
+  outline-style: dotted;
+  outline-color: var(--papel);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .15);
+  transform: rotate(3deg);
+}
+
+.stamp div {
+  width: 100%;
+  height: 100%;
+  background-position: center 20%;
+}
+
+
+/* Carimbo do correio: cidade, data e online (montado no script.js) */
+.pm {
+  position: absolute;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  border-style: solid;
+  border-color: color-mix(in srgb, var(--pm) 55%, transparent);
+  border-radius: 50%;
+  color: color-mix(in srgb, var(--pm) 65%, transparent);
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  transform: rotate(-14deg);
+}
+
+.pm span { display: block; white-space: nowrap; }
+
+/* Assinatura da frase, um pouco menor que a mensagem */
+.msg .assina { font-size: .85em; }
+
+/* Linhas do endereço, uma embaixo de cada item */
+.addr div {
+  padding: var(--pauta-folga) 0;
+  border-bottom: 1px solid var(--linha);
+}
+
+.addr div { overflow-wrap: anywhere; }
+
+.tag {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  background: var(--ink);
+  color: var(--papel);
+  font-family: "Inter", sans-serif;
+  border-radius: 4px;
+}
+
+.tag .play {
+  display: grid;
+  place-items: center;
+  flex: none;
+  background: var(--papel);
+  color: var(--ink);
+  border-radius: 3px;
+}
+
+/* Anterior/próxima (só aparecem com playlist) */
+.tag .pular {
+  display: grid;
+  place-items: center;
+  flex: none;
+  color: var(--papel);
+  opacity: .7;
+}
+
+.tag .pular:hover { opacity: 1; }
+
+.tag .pular svg {
+  width: 12px;
+  height: 12px;
+  fill: currentColor;
+}
+
+.tag .ouvindo {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tag b { font-weight: 600; }
+
+.tag .bar {
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  bottom: 0;
+  height: 2px;
+}
+
+.tag .bar span {
+  display: block;
+  height: 2px;
+  background: color-mix(in srgb, var(--papel) 70%, transparent);
+}
+
+/* ---------- Virar o cartão ----------
+   Clicar vira o cartão de lado e ele cai com a inclinação oposta (--incl).
+   O script.js liga a classe xs-virado no <html>. */
+
+[data-virar] {
+  transform-style: preserve-3d;
+  transform: perspective(3000px) rotate(var(--incl)) rotateY(0deg);
+  cursor: pointer;
+}
+
+/* Entrada: o cartão chega da direita aparecendo aos poucos. Usa "translate"
+   (separado do transform) para não brigar com a inclinação. A transição da virada
+   só liga depois que ele termina de entrar (classe "entrou", posta pelo script.js). */
+.xs-pronto [data-virar] {
+  animation: entrar 1100ms cubic-bezier(.2, .7, .2, 1) backwards;
+}
+
+.xs-pronto .mob .back { animation-delay: 150ms; }
+
+/* Depois de entrar, a animação sai de vez: animação de opacidade presa no fim
+   faz o Chrome achatar o 3D e o verso aparece como a frente espelhada */
+.xs-pronto [data-virar].entrou {
+  animation: none;
+  transition: transform 900ms cubic-bezier(.5, 0, .2, 1);
+}
+
+.xs-pronto .dica {
+  animation: aparecer 600ms ease 900ms both;
+}
+
+@keyframes entrar {
+  from { opacity: 0; translate: 160px 0; }
+  to { opacity: 1; translate: 0 0; }
+}
+
+@keyframes aparecer {
+  from { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .xs-pronto [data-virar],
+  .xs-pronto .dica { animation: none; }
+}
+
+.xs-virado [data-virar] {
+  transform: perspective(3000px) rotate(calc(var(--incl) * -1)) rotateY(180deg);
+}
+
+[data-virar] > .frente,
+[data-virar] > .verso {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+[data-virar] > .verso { transform: rotateY(180deg); }
+
+/* A foto do verso já é clara: fica sem o clareamento que os temas pastel dão na foto da frente */
+.verso .foto { filter: none; }
+
+/* Verso: título e autor da citação em cima, versos embaixo */
+.poema {
+  display: flex;
+  flex-direction: column;
+  font-family: "Special Elite", "Courier New", monospace;
+}
+
+.poema h2 {
+  align-self: flex-start;
+  font-style: italic;
+  line-height: 1;
+}
+
+.poema small {
+  color: color-mix(in srgb, var(--ink) 60%, var(--papel));
+  font-family: "Inter", sans-serif;
+  text-transform: uppercase;
+}
+
+.poema .versos {
+  flex: 1;
+  min-height: 0;
+  border-top: 1px solid var(--linha);
+}
+
+.dica {
+  position: absolute;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: color-mix(in srgb, var(--papel) 75%, transparent);
+  font-family: "Inter", sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, .6);
+  pointer-events: none;
+}
+
+/* No fundo claro, letra escura com um brilho branco embaixo, como se estivesse em relevo */
+[data-cor^="pastel-"] .dica {
+  color: color-mix(in srgb, var(--ink) 75%, var(--p-bg));
+  text-shadow: 0 1px 0 rgba(255, 255, 255, .9), 0 -1px 0 rgba(0, 0, 0, .08);
+}
+
+/* ---------- Desktop ---------- */
+
+.desk { width: 1920px; }
+
+.desk .cartao {
+  --incl: -2deg;
+  position: absolute;
+  left: 300px;
+  top: 120px;
+  width: 1320px;
+  height: 660px;
+}
+
+.desk .card {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  display: flex;
+  padding: 30px;
+  background: var(--papel);
+  box-shadow: 0 40px 70px var(--sombra);
+}
+
+.desk .pic {
+  flex: none;
+  width: 620px;
+  height: 100%;
+}
+
+.desk .pic h1 {
+  left: 36px;
+  bottom: 30px;
+  font-size: 96px;
+}
+
+.desk .pic small {
+  left: 40px;
+  top: 30px;
+  font-size: 12px;
+  letter-spacing: .35em;
+}
+
+
+.desk .back {
+  flex: 1;
+  padding: 20px 40px 20px 50px;
+  font-size: 21px;
+  line-height: 1.7;
+}
+
+/* Linha que divide mensagem e endereço */
+.desk .back::before {
+  content: "";
+  position: absolute;
+  left: 330px;
+  top: 120px;
+  bottom: 40px;
+  width: 1px;
+  background: var(--linha);
+}
+
+/* Começa em 50px (padding) e a linha divisória está em 330px: sobra uma folga antes dela */
+.desk .msg {
+  width: 260px;
+  margin-top: 110px;
+}
+
+.desk .addr {
+  --pauta-folga: 6px;
+  position: absolute;
+  left: 360px;
+  top: 300px;
+  width: 280px;
+  font-size: 18px;
+}
+
+.desk .stamp {
+  right: 40px;
+  top: 30px;
+  width: 120px;
+  height: 150px;
+  padding: 8px;
+  outline-width: 5px;
+  outline-offset: -3px;
+}
+
+.desk .pm {
+  right: 120px;
+  top: 120px;
+  width: 150px;
+  height: 150px;
+  border-width: 3px;
+  font-size: 11px;
+  letter-spacing: .15em;
+  line-height: 1.7;
+}
+
+/* Passa da borda do cartão e é cortada nela (overflow do .card) */
+.desk .waves {
+  position: absolute;
+  right: -40px;
+  top: 175px;
+  width: 180px;
+  height: 40px;
+  background: repeating-linear-gradient(180deg, transparent 0 7px, color-mix(in srgb, var(--pm) 50%, transparent) 7px 10px);
+  transform: rotate(-14deg);
+  -webkit-mask: linear-gradient(90deg, transparent, #000 30%);
+  mask: linear-gradient(90deg, transparent, #000 30%);
+}
+
+.desk .ps {
+  position: absolute;
+  left: 50px;
+  bottom: 40px;
+  width: 260px;
+  font-size: 16px;
+}
+
+.desk .tag {
+  left: 360px;
+  bottom: 40px;
+  max-width: 300px;
+  gap: 8px;
+  padding: 8px 16px 8px 8px;
+  font-size: 12px;
+}
+
+.desk .tag .play { width: 30px; height: 30px; }
+
+.desk .tag .pular { width: 20px; height: 30px; }
+
+.desk .tag .ouvindo { margin-left: 4px; }
+
+.desk .verso .poema {
+  flex: 1;
+  padding: 36px 24px 30px 40px;
+}
+
+.desk .verso .pic {
+  flex: none;
+  width: 460px;
+  height: 100%;
+}
+
+.desk .verso .foto { background-position: center 25%; }
+
+.desk .poema h2 { font-size: 52px; }
+
+.desk .poema small {
+  margin-top: 12px;
+  font-size: 12px;
+  letter-spacing: .3em;
+}
+
+.desk .poema .versos {
+  margin-top: 26px;
+  padding-top: 24px;
+  font-size: 22px;
+  line-height: 1.6;
+}
+
+.desk .poema .versos p + p { margin-top: 18px; }
+
+.desk .dica {
+  top: 820px;
+  font-size: 12px;
+  letter-spacing: .3em;
+}
+
+/* ---------- Mobile ---------- */
+
+.mob { width: 390px; }
+
+.xs-mobile body {
+  background-image: radial-gradient(ellipse at 50% 30%, var(--bg2), var(--bg3) 80%);
+}
+
+.mob .front {
+  --incl: -2.5deg;
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  top: 52px;
+  height: 300px;
+}
+
+/* Cada lado é uma folha inteira; na foto, a borda faz a moldura branca */
+.mob .lado {
+  position: absolute;
+  inset: 0;
+  background: var(--papel);
+  box-shadow: 0 20px 40px var(--sombra);
+}
+
+.mob .front .lado { border: 12px solid var(--papel); }
+
+.mob .front .verso .foto { background-position: center 22%; }
+
+.mob .pic h1 {
+  left: 18px;
+  bottom: 14px;
+  font-size: 58px;
+}
+
+.mob .pic small {
+  left: 18px;
+  top: 14px;
+  font-size: 9px;
+  letter-spacing: .3em;
+}
+
+
+.mob .back {
+  --incl: 1.5deg;
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  top: 376px;
+  bottom: 22px;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.mob .back .lado { padding: 22px; }
+
+.mob .stamp {
+  right: 18px;
+  top: 16px;
+  width: 68px;
+  height: 84px;
+  padding: 5px;
+  outline-width: 4px;
+  outline-offset: -2px;
+}
+
+.mob .pm {
+  right: 62px;
+  top: 64px;
+  width: 92px;
+  height: 92px;
+  border-width: 2px;
+  font-size: 8px;
+  letter-spacing: .12em;
+  line-height: 1.6;
+}
+
+.mob .msg { width: 190px; }
+
+.mob .addr {
+  --pauta-folga: 3px;
+  margin-top: 16px;
+  font-size: 14px;
+}
+
+.mob .ps {
+  margin-top: 16px;
+  font-size: 13px;
+}
+
+.mob .tag {
+  left: 22px;
+  right: 22px;
+  bottom: 20px;
+  gap: 6px;
+  padding: 6px 12px 6px 6px;
+  font-size: 11px;
+}
+
+.mob .tag .play { width: 28px; height: 28px; }
+
+.mob .tag .pular { width: 20px; height: 28px; }
+
+.mob .tag .ouvindo { margin-left: 4px; }
+
+.mob .poema h2 { font-size: 30px; }
+
+.mob .poema small {
+  margin-top: 6px;
+  font-size: 9px;
+  letter-spacing: .25em;
+}
+
+.mob .poema .versos {
+  margin-top: 14px;
+  padding-top: 12px;
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.mob .poema .versos p + p { margin-top: 10px; }
+
+.mob .dica {
+  top: 356px;
+  font-size: 8px;
+  letter-spacing: .3em;
+}
+
+/* No celular a marca fica no topo, acima da foto */
+.xs-mobile { --xs-marca-topo-mobile: 8px; }

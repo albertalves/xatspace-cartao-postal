@@ -1,0 +1,269 @@
+/* Base compartilhada por todos os modelos */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  position: relative;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+.xs-mobile body {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* Some até os dados do cliente chegarem, para não piscar o texto de exemplo */
+html:not(.xs-pronto) body {
+  visibility: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/* ---------- Palco ---------- */
+
+/* Cada layout tem tamanho fixo e é escalado pelo xatspace.js */
+.xs-palco {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: hidden;
+  transform-origin: 0 0;
+}
+
+.xs-palco--mobile,
+.xs-mobile .xs-palco:not(.xs-palco--mobile) {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.xs-mobile .xs-palco--mobile {
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* Camada de fundo que cobre a tela toda, fora do palco */
+.xs-fundo {
+  position: fixed;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+}
+
+.ph {
+  background-size: cover;
+  background-position: center;
+}
+
+/* ---------- Player ---------- */
+
+/* Os filhos do player ficam acima da capa e do vídeo */
+:where([data-xs-player]) {
+  position: relative;
+  overflow: hidden;
+}
+
+:where([data-xs-player] > *) {
+  position: relative;
+  z-index: 2;
+}
+
+.play svg {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+}
+
+/* Anterior/próxima: só com playlist (classe xs-playlist no <html>) */
+html:not(.xs-playlist) [data-xs-anterior],
+html:not(.xs-playlist) [data-xs-proxima] {
+  display: none;
+}
+
+.play .i-pause,
+.is-playing .play .i-play {
+  display: none;
+}
+
+.is-playing .play .i-pause {
+  display: block;
+}
+
+/* Barras do equalizador só se mexem enquanto toca */
+.xs-tocando .eq i {
+  animation: xs-eq 900ms ease-in-out infinite alternate;
+}
+
+.xs-tocando .eq i:nth-child(2n) { animation-delay: -300ms; }
+.xs-tocando .eq i:nth-child(3n) { animation-delay: -600ms; }
+
+@keyframes xs-eq {
+  from { transform: scaleY(.35); }
+  to { transform: scaleY(1); }
+}
+
+/* Barra de progresso: largura vem do xatspace.js */
+[data-xs-barra] {
+  width: var(--xs-progresso, 0%);
+  transition: width 500ms linear;
+}
+
+/* O vídeo do YouTube fica escondido; só o áudio é usado */
+.xs-yt {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.xs-yt iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+/* Dentro do xat o navegador só libera o som com um clique no próprio vídeo.
+   - Até a música começar (classe xs-toque), o vídeo cobre a tela toda por trás
+     da página, e a página inteira deixa o clique passar: clicar em qualquer lugar dá o play.
+   - O Chrome ignora cliques em vídeo transparente, então ele fica visível,
+     escondido atrás de uma capa (.xs-capa-toque) com o mesmo fundo da página.
+   - O YouTube ignora cliques nas faixas de cima e de baixo do vídeo, então ele é
+     bem mais alto que a tela e só a faixa do meio aparece nela. */
+body {
+  z-index: 0;
+}
+
+.xs-capa-toque {
+  display: none;
+}
+
+.xs-toque .xs-capa-toque {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.xs-toque .xs-yt {
+  position: fixed;
+  left: 0;
+  top: 50%;
+  width: 100vw;
+  height: 300vh;
+  transform: translateY(-50%);
+  z-index: -1;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.xs-toque body * {
+  pointer-events: none !important;
+}
+
+.xs-toque .xs-yt,
+.xs-toque .xs-yt * {
+  pointer-events: auto !important;
+}
+
+/* ---------- Selo (marca d'água) ---------- */
+
+/* Pílula pequena com um brilho que pisca; abre o convite ao passar o mouse,
+   e também sozinha por alguns segundos quando a página carrega */
+.xs-marca {
+  position: fixed;
+  z-index: 50;
+  right: var(--xs-marca-direita, 18px);
+  bottom: var(--xs-marca-baixo, 16px);
+  display: flex;
+  align-items: center;
+  gap: 0;
+  height: 32px;
+  padding: 0 8px;
+  border-radius: 99px;
+  border: 1.5px solid color-mix(in srgb, var(--xs-marca-cor, #fff) 35%, transparent);
+  background: color-mix(in srgb, var(--xs-marca-fundo, #000) 75%, transparent);
+  color: var(--xs-marca-cor, #fff);
+  font: 700 11.5px/1 system-ui, sans-serif;
+  letter-spacing: .02em;
+  opacity: .9;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, .14);
+  backdrop-filter: blur(6px);
+  transition: opacity 250ms ease, gap 300ms ease, padding 300ms ease;
+}
+
+.xs-marca svg {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  fill: var(--xs-marca-destaque, currentColor);
+  animation: xs-brilho 2.8s ease-in-out infinite;
+}
+
+/* O brilho cresce e gira um pouco de vez em quando, para chamar atenção */
+@keyframes xs-brilho {
+  0%, 70%, 100% { transform: scale(1) rotate(0); }
+  80% { transform: scale(1.35) rotate(20deg); }
+  90% { transform: scale(.95) rotate(0); }
+}
+
+.xs-marca__t {
+  max-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: max-width 350ms ease;
+}
+
+.xs-marca:hover,
+.xs-marca:focus-visible,
+.xs-marca.is-aberta {
+  opacity: 1;
+  gap: 7px;
+  padding: 0 13px 0 9px;
+}
+
+.xs-marca:hover .xs-marca__t,
+.xs-marca:focus-visible .xs-marca__t,
+.xs-marca.is-aberta .xs-marca__t {
+  max-width: 220px;
+}
+
+.xs-mobile .xs-marca {
+  position: absolute;
+  top: var(--xs-marca-topo-mobile, 12px);
+  bottom: auto;
+  right: 12px;
+  height: 28px;
+  padding: 0 6px;
+}

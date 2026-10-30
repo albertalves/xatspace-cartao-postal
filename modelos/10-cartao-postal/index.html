@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-cores="original masculino feminino feminino-2 pastel-azul pastel-menta pastel-areia pastel-rosa pastel-lilas pastel-pessego">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>xatspace · Cartão-postal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&family=Special+Elite&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../core/base.css">
+  <link rel="stylesheet" href="../../core/cores.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Desktop: desenhado em 1920×900 -->
+  <div class="xs-palco desk" data-largura="1920" data-altura="900">
+    <div class="cartao" data-virar>
+      <div class="card frente">
+        <div class="pic">
+          <div class="foto ph" data-xs-bg="fotos.cenario"></div>
+          <small data-xs-se="local">Lembranças <span data-xs="localDe">do Rio de Janeiro</span></small>
+          <h1 class="serif"><span data-xs="nome">Albert</span><br><em data-xs="sobrenome">Alves</em></h1>
+        </div>
+        <div class="back">
+          <div class="stamp"><div class="ph" data-xs-bg="fotos.perfil"></div></div>
+          <div class="pm" data-xs-carimbo></div>
+          <div class="waves"></div>
+          <p class="msg"><span data-xs="frase"></span><br><br><span class="assina">— <span data-xs-inicial>A.</span></span></p>
+          <div class="addr">
+            <div>Para: quem entrar no xat</div>
+            <div data-xs-gostos></div>
+            <div data-xs-se="instagram"><a data-xs-link="instagramUrl">@<span data-xs="instagram"></span></a></div>
+          </div>
+          <div class="ps" data-xs-se="citacao.texto">P.S. <span data-xs-ps></span></div>
+          <div class="tag" data-xs-player>
+            <button class="pular" type="button" data-xs-anterior aria-label="Música anterior"><svg viewBox="0 0 24 24"><path d="M6 5h2.5v14H6zM19 5v14L9 12z"/></svg></button>
+            <button class="play" type="button" data-xs-tocar aria-label="Tocar música">
+              <svg class="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg>
+              <svg class="i-pause" viewBox="0 0 24 24"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg>
+            </button>
+            <button class="pular" type="button" data-xs-proxima aria-label="Próxima música"><svg viewBox="0 0 24 24"><path d="M15.5 5H18v14h-2.5zM5 5v14l10-7z"/></svg></button>
+            <span class="ouvindo"><b data-xs="musica.titulo"></b></span>
+            <div class="bar"><span data-xs-barra></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Verso: aparece ao clicar, com a outra foto e a citação inteira -->
+      <div class="card verso">
+        <div class="poema" data-xs-se="citacao.texto">
+          <h2 class="serif" data-xs="citacao.titulo"></h2>
+          <small data-xs="citacao.autor"></small>
+          <div class="versos" data-xs-poema></div>
+        </div>
+        <div class="pic"><div class="foto ph" data-xs-bg="fotos.verso"></div></div>
+      </div>
+    </div>
+    <p class="dica">clique no cartão para virar</p>
+  </div>
+
+  <!-- Mobile: desenhado em 390×844 -->
+  <div class="xs-palco xs-palco--mobile mob" data-largura="390" data-altura="844">
+    <div class="front" data-virar>
+      <div class="lado frente pic">
+        <div class="foto ph" data-xs-bg="fotos.cenario"></div>
+        <small data-xs-se="local">Lembranças <span data-xs="localDe">do Rio de Janeiro</span></small>
+        <h1 class="serif"><span data-xs="nome">Albert</span><br><em data-xs="sobrenome">Alves</em></h1>
+      </div>
+      <div class="lado verso pic"><div class="foto ph" data-xs-bg="fotos.verso"></div></div>
+    </div>
+    <p class="dica">toque no cartão para virar</p>
+    <div class="back" data-virar>
+      <div class="lado frente">
+        <div class="stamp"><div class="ph" data-xs-bg="fotos.perfil"></div></div>
+        <div class="pm" data-xs-carimbo></div>
+        <p class="msg"><span data-xs="frase"></span><br><span class="assina">— <span data-xs-inicial>A.</span></span></p>
+        <div class="addr">
+          <div>Para: quem entrar no xat</div>
+          <div data-xs-gostos></div>
+          <div data-xs-se="instagram"><a data-xs-link="instagramUrl">@<span data-xs="instagram"></span></a></div>
+        </div>
+        <p class="ps" data-xs-se="citacao.texto">P.S. <span data-xs-ps></span></p>
+        <div class="tag" data-xs-player>
+          <button class="pular" type="button" data-xs-anterior aria-label="Música anterior"><svg viewBox="0 0 24 24"><path d="M6 5h2.5v14H6zM19 5v14L9 12z"/></svg></button>
+          <button class="play" type="button" data-xs-tocar aria-label="Tocar música">
+            <svg class="i-play" viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg>
+            <svg class="i-pause" viewBox="0 0 24 24"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg>
+          </button>
+          <button class="pular" type="button" data-xs-proxima aria-label="Próxima música"><svg viewBox="0 0 24 24"><path d="M15.5 5H18v14h-2.5zM5 5v14l10-7z"/></svg></button>
+          <span class="ouvindo"><b data-xs="musica.titulo"></b></span>
+          <div class="bar"><span data-xs-barra></span></div>
+        </div>
+      </div>
+      <div class="lado verso poema" data-xs-se="citacao.texto">
+        <h2 class="serif" data-xs="citacao.titulo"></h2>
+        <small data-xs="citacao.autor"></small>
+        <div class="versos" data-xs-poema></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../core/config.js"></script>
+  <script src="../../core/xatspace.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
