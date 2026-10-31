@@ -141,11 +141,37 @@ Xatspace.aoCarregar(function (d) {
     var palco = cartao.closest(".xs-palco");
     var escala = palco.getBoundingClientRect().width / palco.offsetWidth;
     var r = cartao.getBoundingClientRect();
-    env.style.setProperty("--env-w", cartao.offsetWidth * escala + "px");
-    env.style.setProperty("--env-h", cartao.offsetHeight * escala + "px");
-    env.style.setProperty("--env-x", (celular ? innerWidth / 2 : r.left + r.width / 2) + "px");
-    env.style.setProperty("--env-y", (celular ? innerHeight / 2 - 30 : r.top + r.height / 2) + "px");
+    // No <html>: o recorte do vídeo no xat (style.css) também usa essas medidas
+    raiz.style.setProperty("--env-w", cartao.offsetWidth * escala + "px");
+    raiz.style.setProperty("--env-h", cartao.offsetHeight * escala + "px");
+    raiz.style.setProperty("--env-x", (celular ? innerWidth / 2 : r.left + r.width / 2) + "px");
+    raiz.style.setProperty("--env-y", (celular ? innerHeight / 2 - 30 : r.top + r.height / 2) + "px");
   }
+
+  // No xat o mouse passa pela página e cai no vídeo, então o :hover do envelope não
+  // acontece, e o Chrome não avisa a página quando o mouse entra no vídeo (é de outro
+  // site). Por isso o vídeo fica recortado no formato do envelope (style.css): a página
+  // recebe o movimento em todo lugar menos ali. Se o movimento para colado na borda,
+  // indo na direção do envelope, o mouse entrou nele, e a classe xs-env-mira faz o
+  // mesmo efeito do :hover.
+  var ultimo = null;
+  var conferir = null;
+  document.addEventListener("mousemove", function (e) {
+    raiz.classList.remove("xs-env-mira");
+    var dx = ultimo ? e.clientX - ultimo.x : 0;
+    var dy = ultimo ? e.clientY - ultimo.y : 0;
+    ultimo = { x: e.clientX, y: e.clientY };
+    clearTimeout(conferir);
+    if (!raiz.classList.contains("xs-toque")) return;
+    conferir = setTimeout(function () {
+      var r = env.getBoundingClientRect();
+      var margem = 40;
+      var perto = ultimo.x > r.left - margem && ultimo.x < r.right + margem &&
+        ultimo.y > r.top - margem && ultimo.y < r.bottom + margem;
+      var indo = dx * (r.left + r.width / 2 - ultimo.x) + dy * (r.top + r.height / 2 - ultimo.y) > 0;
+      raiz.classList.toggle("xs-env-mira", perto && indo);
+    }, 120);
+  });
   // O palco é ajustado depois deste script; mede em seguida e a cada redimensionamento
   setTimeout(medir, 0);
   window.addEventListener("resize", medir);
