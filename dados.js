@@ -52,9 +52,9 @@ Xatspace.cliente({
   // pastel-rosa, pastel-lilas ou pastel-pessego
   cor: "pastel-areia",
 
-  // Selo no canto: leva para o seu perfil no xat
+  // Selo no canto: leva para o site dos xatspaces
   config: {
-    link: "https://xat.me/AlbertAlves31",
+    link: "http://www.xatspaces.com/",
     convite: "Quero um xatspace assim",
     volume: 60
   }
