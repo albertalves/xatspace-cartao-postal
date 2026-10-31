@@ -118,4 +118,67 @@ Xatspace.aoCarregar(function (d) {
   // Nomes longos diminuem para caber na foto
   Xatspace.caber(document.querySelector(".desk .pic h1"), 550);
   Xatspace.caber(document.querySelector(".mob .pic h1"), 300);
+
+  // ---------- Envelope ----------
+  // Começa fechado. Abrir dá o play e depois mostra o cartão com a entrada de sempre.
+  // Dentro do xat o clique passa pelo envelope e cai no vídeo do YouTube (é o único
+  // jeito de liberar o som lá): o envelope abre quando a música começa ou quando o
+  // vídeo recebe o clique.
+  var envelope = document.querySelector("[data-envelope]");
+  todos("[data-env-inicial]", function (el) {
+    el.textContent = (d.nome || "").charAt(0).toUpperCase();
+  });
+  if (!envelope) return;
+  var aberto = false;
+  var env = envelope.querySelector(".env");
+
+  // Mesmo tamanho do cartão na tela (o palco é reduzido com scale). No computador fica
+  // no lugar do cartão; no celular, no meio da tela, para a carta ter espaço para subir.
+  function medir() {
+    var celular = raiz.classList.contains("xs-mobile");
+    var cartao = document.querySelector(celular ? ".mob .front" : ".desk .cartao");
+    if (!cartao) return;
+    var palco = cartao.closest(".xs-palco");
+    var escala = palco.getBoundingClientRect().width / palco.offsetWidth;
+    var r = cartao.getBoundingClientRect();
+    env.style.setProperty("--env-w", cartao.offsetWidth * escala + "px");
+    env.style.setProperty("--env-h", cartao.offsetHeight * escala + "px");
+    env.style.setProperty("--env-x", (celular ? innerWidth / 2 : r.left + r.width / 2) + "px");
+    env.style.setProperty("--env-y", (celular ? innerHeight / 2 - 30 : r.top + r.height / 2) + "px");
+  }
+  // O palco é ajustado depois deste script; mede em seguida e a cada redimensionamento
+  setTimeout(medir, 0);
+  window.addEventListener("resize", medir);
+
+  function abrir() {
+    if (aberto) return;
+    aberto = true;
+    window.removeEventListener("resize", medir);
+    Xatspace.tocar();
+    envelope.classList.add("abrindo");
+    var reduzido = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // A aba abre e a carta sobe; quando ela termina, o envelope some num fade
+    // (style.css) ao mesmo tempo em que o cartão desce para o lugar
+    setTimeout(function () { raiz.classList.remove("xs-envelope"); }, reduzido ? 0 : 1150);
+    setTimeout(function () { envelope.remove(); }, reduzido ? 0 : 2100);
+  }
+
+  envelope.addEventListener("click", abrir);
+  envelope.addEventListener("keydown", function (e) {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      abrir();
+    }
+  });
+
+  // No xat: a música começou (clique no vídeo) ou o foco foi para o vídeo
+  new MutationObserver(function () {
+    if (raiz.classList.contains("xs-tocando")) abrir();
+  }).observe(raiz, { attributes: true, attributeFilter: ["class"] });
+  window.addEventListener("blur", function () {
+    setTimeout(function () {
+      var foco = document.activeElement;
+      if (foco && foco.tagName === "IFRAME") abrir();
+    }, 0);
+  });
 });

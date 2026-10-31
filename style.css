@@ -193,14 +193,14 @@ body {
   cursor: pointer;
 }
 
-/* Entrada: o cartão chega da direita aparecendo aos poucos. Usa "translate"
+/* Entrada: depois que o envelope abre (a carta sobe), o cartão desce de cima aparecendo aos poucos. Usa "translate"
    (separado do transform) para não brigar com a inclinação. A transição da virada
    só liga depois que ele termina de entrar (classe "entrou", posta pelo script.js). */
-.xs-pronto [data-virar] {
+.xs-pronto:not(.xs-envelope) [data-virar] {
   animation: entrar 1100ms cubic-bezier(.2, .7, .2, 1) backwards;
 }
 
-.xs-pronto .mob .back { animation-delay: 150ms; }
+.xs-pronto:not(.xs-envelope) .mob .back { animation-delay: 150ms; }
 
 /* Depois de entrar, a animação sai de vez: animação de opacidade presa no fim
    faz o Chrome achatar o 3D e o verso aparece como a frente espelhada */
@@ -209,12 +209,12 @@ body {
   transition: transform 900ms cubic-bezier(.5, 0, .2, 1);
 }
 
-.xs-pronto .dica {
+.xs-pronto:not(.xs-envelope) .dica {
   animation: aparecer 600ms ease 900ms both;
 }
 
 @keyframes entrar {
-  from { opacity: 0; translate: 160px 0; }
+  from { opacity: 0; translate: 0 -160px; }
   to { opacity: 1; translate: 0 0; }
 }
 
@@ -223,8 +223,8 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .xs-pronto [data-virar],
-  .xs-pronto .dica { animation: none; }
+  .xs-pronto:not(.xs-envelope) [data-virar],
+  .xs-pronto:not(.xs-envelope) .dica { animation: none; }
 }
 
 .xs-virado [data-virar] {
@@ -587,3 +587,246 @@ html:not(.xs-virado):not(.xs-girando) [data-virar] > .verso { visibility: hidden
 
 /* No celular a marca fica no topo, acima da foto */
 .xs-mobile { --xs-marca-topo-mobile: 8px; }
+
+/* ---------- Envelope de abertura ----------
+   Cobre a página até ser aberto. Abrindo: o lacre some, a aba vira para cima,
+   a carta sobe e o envelope desaparece; aí o cartão faz a entrada normal. */
+
+.envelope {
+  --env: color-mix(in srgb, var(--papel) 90%, var(--ink));
+  --env-aba: color-mix(in srgb, var(--papel) 84%, var(--ink));
+  --env-dentro: color-mix(in srgb, var(--papel) 70%, var(--ink));
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: var(--bg3) radial-gradient(ellipse at 50% 40%, var(--bg2), var(--bg3) 75%) no-repeat;
+  cursor: pointer;
+  outline: none;
+  /* Some devagar no mesmo momento em que o cartão começa a descer (script.js, 1150ms) */
+  transition: opacity 900ms ease-in-out 1150ms;
+}
+
+.xs-mobile .envelope {
+  background-image: radial-gradient(ellipse at 50% 30%, var(--bg2), var(--bg3) 80%);
+}
+
+/* Tamanho e centro vêm do script.js (--env-*), iguais aos do cartão.
+   Os tamanhos internos usam cqw/cqh: acompanham o envelope. */
+.env {
+  position: absolute;
+  left: var(--env-x, 50%);
+  top: var(--env-y, 50%);
+  width: var(--env-w, min(660px, 84vw));
+  height: var(--env-h, min(330px, 42vw));
+  translate: -50% -50%;
+  container-type: size;
+  background: var(--env-dentro);
+  border-radius: 6px;
+  box-shadow: 0 30px 60px var(--sombra);
+  perspective: 1400px;
+  animation: env-chegar 900ms cubic-bezier(.2, .7, .2, 1) backwards;
+  transition: transform 300ms ease;
+}
+
+/* Parado fica reto; inclina só com o mouse em cima do envelope */
+.env:hover,
+.envelope:focus-visible .env { transform: translateY(-4px) rotate(-1deg); }
+
+/* E a ponta do lacre descola, como se fosse abrir */
+.env:hover .env__selo,
+.envelope:focus-visible .env__selo { --dobra: 53%; }
+
+/* Carta dentro do envelope: uma prévia da frente do cartão, que sobe quando a aba abre */
+.env__carta {
+  position: absolute;
+  left: 5%;
+  right: 5%;
+  top: 5%;
+  bottom: 6%;
+  z-index: 1;
+  display: flex;
+  padding: 2.3cqw;
+  background: var(--papel);
+  border-radius: 3px;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, .12);
+  transition: transform 800ms cubic-bezier(.3, .7, .3, 1) 450ms;
+}
+
+.env__mini-foto {
+  position: relative;
+  flex: none;
+  width: 47%;
+  height: 100%;
+  background-size: cover;
+  background-position: center 60%;
+  filter: var(--foto-filtro);
+}
+
+.env__mini-foto span {
+  position: absolute;
+  left: 7%;
+  bottom: 6%;
+  color: #fff;
+  font-size: 14cqh;
+  line-height: .85;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, .4);
+}
+
+/* Lado do texto, só sugerido: pautas e o selo com a foto */
+.env__mini-verso {
+  position: relative;
+  flex: 1;
+  margin-left: 4%;
+  background: repeating-linear-gradient(transparent 0 7cqh, color-mix(in srgb, var(--linha) 60%, transparent) 7cqh calc(7cqh + 1px)) 0 30% / 100% 60% no-repeat;
+}
+
+.env__mini-selo {
+  position: absolute;
+  right: 4%;
+  top: 2%;
+  width: 16%;
+  aspect-ratio: 4 / 5;
+  background-size: cover;
+  background-position: center;
+  border: 3px solid #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .25);
+}
+
+/* No celular a frente do cartão é só a foto, com a moldura de papel */
+.xs-mobile .env__carta { padding: 3.5cqw; }
+.xs-mobile .env__mini-foto { width: 100%; }
+.xs-mobile .env__mini-verso { display: none; }
+
+/* Bolso da frente: o recorte em V deixa a aba fechar por cima */
+.env__frente {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: var(--env);
+  border-radius: 6px;
+  clip-path: polygon(0 0, 50% 54%, 100% 0, 100% 100%, 0 100%);
+  font-family: "Special Elite", "Courier New", monospace;
+  color: var(--ink);
+}
+
+.env__de,
+.env__para {
+  position: absolute;
+  left: 7%;
+  font-size: clamp(11px, 5cqh, 24px);
+}
+
+.env__de { bottom: 25%; opacity: .7; }
+.env__para { bottom: 12%; }
+
+.env__aba {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 56%;
+  z-index: 3;
+  background: var(--env-aba);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transform-origin: 50% 0;
+  border-radius: 6px 6px 0 0;
+}
+
+/* Lacre de cera na cor do carimbo, com a inicial */
+/* Com o mouse no envelope, a ponta de cima à direita dobra para fora, mostrando o verso.
+   --dobra é onde a dobra corta a borda do quadrado (quanto maior, mais dobra).
+   Até ~29% a linha nem encosta no círculo: o lacre fica inteiro, colado.
+   A parte dobrada é o pedaço cortado do círculo espelhado na linha da dobra:
+   um círculo igual, deslocado, recortado do lado de dentro dessa linha. */
+@property --dobra {
+  syntax: "<percentage>";
+  inherits: true;
+  initial-value: 25%;
+}
+
+.env__selo {
+  --dobra: 25%;
+  position: absolute;
+  left: 50%;
+  top: 56%;
+  z-index: 4;
+  width: clamp(44px, 18cqh, 110px);
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  filter: drop-shadow(0 3px 4px rgba(0, 0, 0, .35));
+  transition: --dobra 350ms ease, transform 300ms ease, opacity 300ms ease;
+}
+
+.env__selo-cara,
+.env__selo-dobra {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+}
+
+.env__selo-cara {
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--pm) 70%, #fff), var(--pm) 55%, color-mix(in srgb, var(--pm) 70%, #000));
+  box-shadow: inset 0 0 0 4px color-mix(in srgb, var(--pm) 80%, #000);
+  clip-path: polygon(0 0, calc(100% - var(--dobra)) 0, 100% var(--dobra), 100% 100%, 0 100%);
+  color: color-mix(in srgb, var(--pm) 25%, #fff);
+  font-family: "Instrument Serif", Georgia, serif;
+  font-size: clamp(22px, 9cqh, 56px);
+}
+
+/* Verso do adesivo: mais claro e fosco, mais escuro junto da dobra */
+.env__selo-dobra {
+  translate: calc(100% - var(--dobra)) calc(var(--dobra) - 100%);
+  /* A parte visível fica no canto de baixo à esquerda deste círculo: o degradê vai da dobra (72%) à ponta */
+  background: linear-gradient(to bottom left, color-mix(in srgb, var(--pm) 55%, #fff) 72%, color-mix(in srgb, var(--pm) 18%, #fff) 95%);
+  clip-path: polygon(0 calc(100% - var(--dobra)), var(--dobra) 100%, 0 100%);
+}
+
+.envelope__dica {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 26px);
+  text-align: center;
+  color: var(--papel);
+  opacity: .7;
+  font-size: 12px;
+  letter-spacing: .35em;
+  text-transform: uppercase;
+  animation: env-piscar 2.4s ease-in-out infinite;
+}
+
+/* Abrindo */
+.envelope.abrindo { opacity: 0; pointer-events: none; }
+.abrindo .env { transform: none; }
+.abrindo .env__selo { transform: scale(.4); opacity: 0; }
+.abrindo .env__aba { animation: env-aba 600ms cubic-bezier(.5, 0, .3, 1) 150ms forwards; }
+.abrindo .env__carta { transform: translateY(-58%); }
+.abrindo .envelope__dica { animation: none; opacity: 0; }
+
+[data-cor^="pastel-"] .envelope__dica {
+  color: color-mix(in srgb, var(--ink) 75%, var(--p-bg));
+}
+
+/* No fundo claro o envelope precisa de um contorno para não sumir */
+[data-cor^="pastel-"] .env { box-shadow: 0 0 0 1px color-mix(in srgb, var(--ink) 10%, transparent), 0 30px 60px rgba(0, 0, 0, .18); }
+
+@keyframes env-aba {
+  0% { transform: rotateX(0); z-index: 3; }
+  50% { z-index: 3; }
+  51% { z-index: 0; }
+  100% { transform: rotateX(180deg); z-index: 0; }
+}
+
+@keyframes env-chegar {
+  from { opacity: 0; transform: translateY(40px); }
+}
+
+@keyframes env-piscar {
+  50% { opacity: .25; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .env, .envelope__dica { animation: none; }
+}

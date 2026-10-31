@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-cores="original masculino feminino feminino-2 pastel-azul pastel-menta pastel-areia pastel-rosa pastel-lilas pastel-pessego">
+<html lang="pt-BR" class="xs-envelope xs-esperar" data-cores="original masculino feminino feminino-2 pastel-azul pastel-menta pastel-areia pastel-rosa pastel-lilas pastel-pessego">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,6 +11,32 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- Envelope fechado: abrir dá o play na música e mostra o cartão -->
+  <div class="envelope" data-envelope role="button" tabindex="0" aria-label="Abrir o envelope">
+    <!-- Do tamanho e no lugar do cartão (medido no script.js) -->
+    <div class="env">
+      <!-- A carta é uma prévia da frente do cartão -->
+      <div class="env__carta">
+        <div class="env__mini-foto ph" data-xs-bg="fotos.cenario">
+          <span class="serif" data-xs="nome">Albert</span>
+        </div>
+        <div class="env__mini-verso">
+          <div class="env__mini-selo ph" data-xs-bg="fotos.perfil"></div>
+        </div>
+      </div>
+      <div class="env__frente">
+        <div class="env__de">De: <span data-xs="nome">Albert</span></div>
+        <div class="env__para">Para: visitante</div>
+      </div>
+      <div class="env__aba"></div>
+      <div class="env__selo">
+        <div class="env__selo-cara" data-env-inicial>A</div>
+        <div class="env__selo-dobra"></div>
+      </div>
+      <p class="envelope__dica">clique para abrir</p>
+    </div>
+  </div>
+
   <!-- Desktop: desenhado em 1920×900 -->
   <div class="xs-palco desk" data-largura="1920" data-altura="900">
     <div class="cartao" data-virar>

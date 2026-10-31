@@ -28,6 +28,11 @@
       if (dados) fn(dados);
       else aoCarregar.push(fn);
     },
+    // Começa a música agora (ex.: ao abrir o envelope). Chamar dentro de um clique.
+    tocar: function () {
+      raiz.classList.remove("xs-esperar");
+      if (comecar) comecar();
+    },
     get: get,
     arquivo: arquivo,
     caber: caber
@@ -178,6 +183,13 @@
   var player = null;
   var pausadoPeloUsuario = false;
   var video = null;
+  var comecar = null;
+
+  // Com a classe xs-esperar no <html> (ex.: envelope fechado), a música não
+  // tenta começar sozinha: espera o Xatspace.tocar()
+  function esperando() {
+    return raiz.classList.contains("xs-esperar");
+  }
 
   // Dentro do xat o som só libera com um clique no próprio vídeo do YouTube
   var emMoldura = true;
@@ -282,6 +294,7 @@
     // O navegador só deixa tocar som depois que a pessoa interage com a página
     function tocarNaPrimeiraInteracao() {
       function start() {
+        if (esperando()) return;
         document.removeEventListener("pointerdown", start);
         document.removeEventListener("keydown", start);
         if (player && !pausadoPeloUsuario && !tocando()) player.playVideo();
@@ -320,8 +333,17 @@
       if (!musicas || !musicas.length) return;
       embaralhada = true;
       player.setShuffle(true);
-      player.playVideoAt(0);
+      if (!esperando()) player.playVideoAt(0);
     }
+
+    // Esperando, o play fica para o Xatspace.tocar(); no aleatório começa pela
+    // primeira música da ordem já embaralhada
+    comecar = function () {
+      if (!player || !player.playVideo || tocando()) return;
+      pausadoPeloUsuario = false;
+      if (aleatorio && embaralhada) player.playVideoAt(0);
+      else player.playVideo();
+    };
 
     window.onYouTubeIframeAPIReady = function () {
       var opcoes = {
@@ -331,7 +353,7 @@
         events: {
           onReady: function (e) {
             e.target.setVolume(config.volume || 60);
-            e.target.playVideo();
+            if (!esperando()) e.target.playVideo();
             embaralhar();
             setTimeout(function () {
               if (!tocando()) tocarNaPrimeiraInteracao();
