@@ -54,7 +54,7 @@ Xatspace.cliente({
 
   // Selo no canto: leva para o site dos xatspaces
   config: {
-    link: "http://www.xatspaces.com/",
+    link: "https://xatspaces.com/",
     convite: "Quero um xatspace assim",
     volume: 60
   }
