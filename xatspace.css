@@ -19,9 +19,9 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* No celular o palco já cabe na tela, então a página não rola */
 .xs-mobile body {
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: hidden;
 }
 
 /* Some até os dados do cliente chegarem, para não piscar o texto de exemplo */
