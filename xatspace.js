@@ -164,11 +164,11 @@
       var e;
       if (girar) {
         e = Math.min(w / ph, h / pw);
-        var tx = (w - ph * e) / 2;
-        var ty = (h + pw * e) / 2;
+        var tx = (w + ph * e) / 2;
+        var ty = (h - pw * e) / 2;
         palco.style.left = "0px";
         palco.style.top = "0px";
-        palco.style.transform = "translate(" + tx + "px," + ty + "px) rotate(-90deg) scale(" + e + ")";
+        palco.style.transform = "translate(" + tx + "px," + ty + "px) rotate(90deg) scale(" + e + ")";
       } else {
         e = Math.min(w / pw, h / ph);
         palco.style.transform = "scale(" + e + ")";
