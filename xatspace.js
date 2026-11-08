@@ -149,45 +149,39 @@
   function ajustarPalco() {
     var w = window.innerWidth;
     var h = window.innerHeight;
-    var mobile = w < 760 || w / h < 0.75;
-    raiz.classList.toggle("xs-mobile", mobile);
+    // No celular em pé o cartão de desktop gira inteiro (texto junto).
+    // Deitado, ele volta ao normal e cabe na tela.
+    var girar = h > w && w < 760;
+    raiz.classList.toggle("xs-girado", girar);
+    raiz.classList.remove("xs-mobile");
 
     each(".xs-palco", function (palco) {
+      if (palco.classList.contains("xs-palco--mobile")) return;
       var pw = Number(palco.dataset.largura);
       var ph = Number(palco.dataset.altura);
-      var ehMobile = palco.classList.contains("xs-palco--mobile");
-      if (ehMobile !== mobile) return;
-
-      if (ehMobile) {
-        // Cabe na tela inteira: encolhe pela largura ou pela altura, o que limitar primeiro
-        var e = Math.min(w / pw, h / ph);
-        var esquerda = (w - pw * e) / 2;
-        var topo = (h - ph * e) / 2;
-        palco.style.height = ph + "px";
-        palco.style.transform = "scale(" + e + ")";
-        palco.style.left = esquerda + "px";
-        palco.style.top = topo + "px";
-        document.body.style.height = "";
-        // Selo como no Eclipse: abaixo da faixa do xat, no canto direito do palco
-        var marca = document.querySelector(".xs-marca");
-        if (marca) {
-          marca.style.top = topo + 48 * e + 10 + "px";
-          marca.style.right = esquerda + 16 * e + "px";
-          marca.style.bottom = "auto";
-        }
+      palco.style.height = ph + "px";
+      palco.style.transformOrigin = "0 0";
+      var e;
+      if (girar) {
+        e = Math.min(w / ph, h / pw);
+        var tx = (w - ph * e) / 2;
+        var ty = (h + pw * e) / 2;
+        palco.style.left = "0px";
+        palco.style.top = "0px";
+        palco.style.transform = "translate(" + tx + "px," + ty + "px) rotate(-90deg) scale(" + e + ")";
       } else {
-        var esc = Math.min(w / pw, h / ph);
-        palco.style.height = ph + "px";
-        palco.style.transform = "scale(" + esc + ")";
-        palco.style.left = (w - pw * esc) / 2 + "px";
-        palco.style.top = (h - ph * esc) / 2 + "px";
-        document.body.style.height = "";
-        var marcaDesk = document.querySelector(".xs-marca");
-        if (marcaDesk) {
-          marcaDesk.style.top = "";
-          marcaDesk.style.right = "";
-          marcaDesk.style.bottom = "";
-        }
+        e = Math.min(w / pw, h / ph);
+        palco.style.transform = "scale(" + e + ")";
+        palco.style.left = (w - pw * e) / 2 + "px";
+        palco.style.top = (h - ph * e) / 2 + "px";
+      }
+      palco.dataset.escala = String(e);
+      document.body.style.height = "";
+      var marca = document.querySelector(".xs-marca");
+      if (marca) {
+        marca.style.top = "";
+        marca.style.right = "";
+        marca.style.bottom = "";
       }
     });
   }

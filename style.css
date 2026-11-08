@@ -1,4 +1,4 @@
-/* Cartão-postal
+﻿/* Cartão-postal
    Cores: original (azul-ardósia), masculino (verde), feminino (rosa),
    feminino-2 (lavanda) e as 6 pastel.
    --bg/--bg2/--bg3: fundo e degradê atrás do cartão; --papel: cartão;
@@ -199,8 +199,6 @@ body {
 .xs-pronto:not(.xs-envelope) [data-virar] {
   animation: entrar 1800ms cubic-bezier(.3, .6, .25, 1) backwards;
 }
-
-.xs-pronto:not(.xs-envelope) .mob .back { animation-delay: 150ms; }
 
 /* Depois de entrar, a animação sai de vez: animação de opacidade presa no fim
    faz o Chrome achatar o 3D e o verso aparece como a frente espelhada */
@@ -462,7 +460,7 @@ html:not(.xs-virado):not(.xs-girando) [data-virar] > .verso { visibility: hidden
   letter-spacing: .3em;
 }
 
-/* ---------- Mobile ---------- */
+/* ---------- Mobile (carta em pé, 390×844) ---------- */
 
 .mob { width: 390px; }
 
@@ -470,87 +468,101 @@ html:not(.xs-virado):not(.xs-girando) [data-virar] > .verso { visibility: hidden
   background-image: radial-gradient(ellipse at 50% 30%, var(--bg2), var(--bg3) 80%);
 }
 
-.mob .front {
-  --incl: -2.5deg;
+.mob .cartao {
+  --incl: -1.5deg;
   position: absolute;
-  left: 22px;
-  right: 22px;
-  top: 52px;
-  height: 300px;
+  left: 16px;
+  top: 36px;
+  width: 358px;
+  height: 780px;
 }
 
-/* Cada lado é uma folha inteira; na foto, a borda faz a moldura branca */
-.mob .lado {
+.mob .card {
   position: absolute;
   inset: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
   background: var(--papel);
-  box-shadow: 0 20px 40px var(--sombra);
+  box-shadow: 0 24px 40px var(--sombra);
 }
 
-.mob .front .lado { border: 12px solid var(--papel); }
-
-.mob .front .verso .foto { background-position: center 22%; }
+.mob .pic {
+  flex: none;
+  width: 100%;
+  height: 340px;
+}
 
 .mob .pic h1 {
-  left: 18px;
+  left: 16px;
   bottom: 14px;
-  font-size: 58px;
+  font-size: 56px;
 }
 
 .mob .pic small {
   left: 18px;
   top: 14px;
   font-size: 9px;
-  letter-spacing: .3em;
+  letter-spacing: .28em;
 }
-
 
 .mob .back {
-  --incl: 1.5deg;
-  position: absolute;
-  left: 18px;
-  right: 18px;
-  top: 390px;
-  bottom: 22px;
-  font-size: 15px;
-  line-height: 1.6;
+  flex: 1;
+  min-height: 0;
+  padding: 16px 8px 8px;
+  font-size: 16px;
+  line-height: 1.5;
 }
 
-.mob .back .lado { padding: 22px; }
+.mob .msg { width: 210px; }
+
+.mob .addr {
+  --pauta-folga: 4px;
+  position: absolute;
+  left: 8px;
+  right: 16px;
+  bottom: 72px;
+  font-size: 14px;
+}
 
 .mob .stamp {
-  right: 18px;
-  top: 16px;
-  width: 68px;
-  height: 84px;
+  right: 8px;
+  top: 8px;
+  width: 72px;
+  height: 90px;
   padding: 5px;
   outline-width: 4px;
   outline-offset: -2px;
 }
 
 .mob .pm {
-  right: 62px;
-  top: 64px;
-  width: 92px;
-  height: 92px;
+  right: 52px;
+  top: 72px;
+  width: 86px;
+  height: 86px;
   border-width: 2px;
   font-size: 8px;
-  letter-spacing: .12em;
-  line-height: 1.6;
+  letter-spacing: .1em;
+  line-height: 1.5;
 }
 
-.mob .msg { width: 190px; }
-
-.mob .addr {
-  --pauta-folga: 3px;
-  margin-top: 16px;
-  font-size: 14px;
+.mob .waves {
+  position: absolute;
+  right: -16px;
+  top: 110px;
+  width: 110px;
+  height: 26px;
+  background: repeating-linear-gradient(180deg, transparent 0 5px, color-mix(in srgb, var(--pm) 50%, transparent) 5px 7px);
+  transform: rotate(-14deg);
+  -webkit-mask: linear-gradient(90deg, transparent, #000 30%);
+  mask: linear-gradient(90deg, transparent, #000 30%);
 }
 
 .mob .tag {
-  left: 22px;
-  right: 22px;
-  bottom: 20px;
+  left: 8px;
+  right: 8px;
+  bottom: 14px;
   gap: 6px;
   padding: 6px 12px 6px 6px;
   font-size: 11px;
@@ -562,32 +574,44 @@ html:not(.xs-virado):not(.xs-girando) [data-virar] > .verso { visibility: hidden
 
 .mob .tag .ouvindo { margin-left: 4px; }
 
-.mob .poema h2 { font-size: 30px; }
+.mob .verso .poema {
+  flex: 1;
+  min-height: 0;
+  padding: 8px 6px 12px;
+}
+
+.mob .verso .pic {
+  flex: none;
+  width: 100%;
+  height: 280px;
+}
+
+.mob .verso .foto { background-position: center 25%; }
+
+.mob .poema h2 { font-size: 32px; }
 
 .mob .poema small {
   margin-top: 6px;
-  font-size: 9px;
-  letter-spacing: .25em;
+  font-size: 10px;
+  letter-spacing: .22em;
 }
 
 .mob .poema .versos {
-  margin-top: 14px;
-  padding-top: 12px;
+  margin-top: 12px;
+  padding-top: 10px;
   font-size: 15px;
-  line-height: 1.55;
+  line-height: 1.5;
 }
 
 .mob .poema .versos p + p { margin-top: 10px; }
 
 .mob .dica {
-  top: 364px;
-  font-size: 8px;
-  letter-spacing: .3em;
+  top: 12px;
+  font-size: 9px;
+  letter-spacing: .28em;
 }
 
-/* No celular a marca fica no topo, acima da foto */
 .xs-mobile { --xs-marca-topo-mobile: 8px; }
-
 /* ---------- Envelope de abertura ----------
    Cobre a página até ser aberto. Abrindo: o lacre some, a aba vira para cima,
    a carta sobe e o envelope desaparece; aí o cartão faz a entrada normal. */
@@ -632,6 +656,18 @@ html:not(.xs-virado):not(.xs-girando) [data-virar] > .verso { visibility: hidden
 .env:hover,
 .xs-env-mira .env,
 .envelope:focus-visible .env { transform: translateY(-4px) rotate(-1deg); }
+
+/* O envelope gira junto com o cartão de desktop */
+.xs-girado .env { transform: rotate(-90deg); }
+
+.xs-girado .env:hover,
+.xs-girado.xs-env-mira .env,
+.xs-girado .envelope:focus-visible .env { transform: translateY(-4px) rotate(-91deg); }
+
+.xs-girado.xs-envelope.xs-toque .xs-yt {
+  clip-path: inset(calc(var(--env-y) - var(--env-w) / 2 + 100vh) calc(100vw - var(--env-x) - var(--env-h) / 2)
+    calc(200vh - var(--env-y) - var(--env-w) / 2) calc(var(--env-x) - var(--env-h) / 2) round 6px);
+}
 
 /* E a ponta do lacre descola, como se fosse abrir */
 .env:hover .env__selo,

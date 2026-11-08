@@ -101,7 +101,7 @@ Xatspace.aoCarregar(function (d) {
     }
   }
   encolher(document.querySelector(".desk .msg"), 320);
-  encolher(document.querySelector(".mob .msg"), 160);
+  encolher(document.querySelector(".mob .msg"), 150);
   // Os versos ocupam o espaço que sobra no verso (flex: 1) e diminuem até caber nele.
   // Mede de novo quando as fontes carregam, porque a letra provisória é mais larga.
   function caberPoema() {
@@ -110,14 +110,14 @@ Xatspace.aoCarregar(function (d) {
       encolher(el, el.clientHeight);
     });
     Xatspace.caber(document.querySelector(".desk .poema h2"), 680);
-    Xatspace.caber(document.querySelector(".mob .poema h2"), 300);
+    Xatspace.caber(document.querySelector(".mob .poema h2"), 500);
   }
   caberPoema();
   if (document.fonts) document.fonts.ready.then(caberPoema);
 
   // Nomes longos diminuem para caber na foto
   Xatspace.caber(document.querySelector(".desk .pic h1"), 550);
-  Xatspace.caber(document.querySelector(".mob .pic h1"), 300);
+  Xatspace.caber(document.querySelector(".mob .pic h1"), 320);
 
   // ---------- Envelope ----------
   // Começa fechado. Abrir dá o play e depois mostra o cartão com a entrada de sempre.
@@ -135,17 +135,15 @@ Xatspace.aoCarregar(function (d) {
   // Mesmo tamanho do cartão na tela (o palco é reduzido com scale). No computador fica
   // no lugar do cartão; no celular, no meio da tela, para a carta ter espaço para subir.
   function medir() {
-    var celular = raiz.classList.contains("xs-mobile");
-    var cartao = document.querySelector(celular ? ".mob .front" : ".desk .cartao");
+    var cartao = document.querySelector(".desk .cartao");
     if (!cartao) return;
     var palco = cartao.closest(".xs-palco");
-    var escala = palco.getBoundingClientRect().width / palco.offsetWidth;
+    var escala = Number(palco.dataset.escala) || 1;
     var r = cartao.getBoundingClientRect();
-    // No <html>: o recorte do vídeo no xat (style.css) também usa essas medidas
     raiz.style.setProperty("--env-w", cartao.offsetWidth * escala + "px");
     raiz.style.setProperty("--env-h", cartao.offsetHeight * escala + "px");
-    raiz.style.setProperty("--env-x", (celular ? innerWidth / 2 : r.left + r.width / 2) + "px");
-    raiz.style.setProperty("--env-y", (celular ? innerHeight / 2 - 30 : r.top + r.height / 2) + "px");
+    raiz.style.setProperty("--env-x", (r.left + r.width / 2) + "px");
+    raiz.style.setProperty("--env-y", (r.top + r.height / 2) + "px");
   }
 
   // No xat o mouse passa pela página e cai no vídeo, então o :hover do envelope não
